@@ -46,4 +46,16 @@ public class CreateUserTest {
 
         accessToken = response.extract().path("accessToken");
     }
+    @Test
+    @DisplayName("Нельзя создать уже зарегистрированного пользователя")
+    @Description("Повторная регистрация с теми же данными возвращает ошибку 403")
+    public void createExistingUserReturnsError() {
+        ValidatableResponse firstResponse = userClient.create(user);
+        accessToken = firstResponse.extract().path("accessToken");
+
+        userClient.create(user)
+                .statusCode(403)
+                .body("success", equalTo(false))
+                .body("message", equalTo("User already exists"));
+    }
 }
