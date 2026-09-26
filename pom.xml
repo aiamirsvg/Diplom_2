@@ -15,10 +15,10 @@
         <maven.compiler.target>11</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <rest.assured.version>6.0.1</rest.assured.version>
+        <rest.assured.version>5.5.0</rest.assured.version>
         <junit.version>4.13.2</junit.version>
-        <allure.version>2.35.3</allure.version>
-        <aspectj.version>1.9.25</aspectj.version>
+        <allure.version>2.29.1</allure.version>
+        <aspectj.version>1.9.22.1</aspectj.version>
     </properties>
 
     <dependencyManagement>
@@ -56,6 +56,12 @@
             <groupId>io.qameta.allure</groupId>
             <artifactId>allure-junit4</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.17.2</version>
         </dependency>
     </dependencies>
 
