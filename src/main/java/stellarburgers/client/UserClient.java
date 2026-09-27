@@ -1,32 +1,19 @@
 package stellarburgers.client;
 
-import io.qameta.allure.restassured.AllureRestAssured;
-import io.restassured.builder.RequestSpecBuilder;
+import io.qameta.allure.Step;
 import io.restassured.response.ValidatableResponse;
-import io.restassured.specification.RequestSpecification;
 import stellarburgers.model.User;
 import stellarburgers.model.UserCredentials;
 
 import static io.restassured.RestAssured.given;
-import static io.restassured.http.ContentType.JSON;
 
-public class UserClient {
-
-    private static final String BASE_URL =
-            "https://stellarburgers.education-services.ru";
+public class UserClient extends BaseClient {
 
     private static final String REGISTER_PATH = "/api/auth/register";
     private static final String LOGIN_PATH = "/api/auth/login";
     private static final String USER_PATH = "/api/auth/user";
 
-    private RequestSpecification requestSpecification() {
-        return new RequestSpecBuilder()
-                .setBaseUri(BASE_URL)
-                .setContentType(JSON)
-                .addFilter(new AllureRestAssured())
-                .build();
-    }
-
+    @Step("Создать пользователя")
     public ValidatableResponse create(User user) {
         return given()
                 .spec(requestSpecification())
@@ -36,6 +23,7 @@ public class UserClient {
                 .then();
     }
 
+    @Step("Выполнить вход пользователя")
     public ValidatableResponse login(UserCredentials credentials) {
         return given()
                 .spec(requestSpecification())
@@ -45,6 +33,7 @@ public class UserClient {
                 .then();
     }
 
+    @Step("Удалить пользователя")
     public ValidatableResponse delete(String accessToken) {
         return given()
                 .spec(requestSpecification())

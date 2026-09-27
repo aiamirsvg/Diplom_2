@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 import stellarburgers.client.UserClient;
 import stellarburgers.model.User;
+import static org.apache.http.HttpStatus.*;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
@@ -38,7 +39,7 @@ public class CreateUserTest {
         ValidatableResponse response = userClient.create(user);
 
         response
-                .statusCode(200)
+                .statusCode(SC_OK)
                 .body("success", equalTo(true))
                 .body("user.email", equalTo(user.getEmail()))
                 .body("user.name", equalTo(user.getName()))
@@ -54,7 +55,7 @@ public class CreateUserTest {
         accessToken = firstResponse.extract().path("accessToken");
 
         userClient.create(user)
-                .statusCode(403)
+                .statusCode(SC_FORBIDDEN)
                 .body("success", equalTo(false))
                 .body("message", equalTo("User already exists"));
     }

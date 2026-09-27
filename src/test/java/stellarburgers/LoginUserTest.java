@@ -9,6 +9,7 @@ import org.junit.Test;
 import stellarburgers.client.UserClient;
 import stellarburgers.model.User;
 import stellarburgers.model.UserCredentials;
+import static org.apache.http.HttpStatus.*;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
@@ -40,7 +41,7 @@ public class LoginUserTest {
     @Description("Проверяем успешный вход с правильными email и паролем")
     public void loginExistingUserReturnsSuccess() {
         userClient.login(UserCredentials.from(user))
-                .statusCode(200)
+                .statusCode(SC_OK)
                 .body("success", equalTo(true))
                 .body("user.email", equalTo(user.getEmail()))
                 .body("user.name", equalTo(user.getName()))
@@ -49,13 +50,35 @@ public class LoginUserTest {
 
     @Test
     @DisplayName("Вход с неверным паролем")
-    @Description("Проверяем ошибку входа при неверных учётных данных")
+    @Description("Проверяем ошибку входа при неверном пароле")
     public void loginWithWrongPasswordReturnsError() {
         UserCredentials wrongCredentials =
-                new UserCredentials(user.getEmail(), "wrong-password");
+                new UserCredentials(
+                        user.getEmail(),
+                        "wrong-password"
+                );
 
         userClient.login(wrongCredentials)
-                .statusCode(401)
+                .statusCode(SC_UNAUTHORIZED)
+                .body("success", equalTo(false))
+                .body(
+                        "message",
+                        equalTo("email or password are incorrect")
+                );
+    }
+
+    @Test
+    @DisplayName("Вход с неверным логином")
+    @Description("Проверяем ошибку входа при неверном email")
+    public void loginWithWrongEmailReturnsError() {
+        UserCredentials wrongCredentials =
+                new UserCredentials(
+                        "wrong-" + user.getEmail(),
+                        user.getPassword()
+                );
+
+        userClient.login(wrongCredentials)
+                .statusCode(SC_UNAUTHORIZED)
                 .body("success", equalTo(false))
                 .body(
                         "message",

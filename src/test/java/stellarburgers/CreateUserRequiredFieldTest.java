@@ -7,6 +7,8 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import stellarburgers.client.UserClient;
 import stellarburgers.model.User;
+import static org.apache.http.HttpStatus.*;
+
 
 import static org.hamcrest.Matchers.equalTo;
 
@@ -45,7 +47,7 @@ public class CreateUserRequiredFieldTest {
     public void createUserWithoutRequiredFieldReturnsError() {
         new UserClient()
                 .create(user)
-                .statusCode(403)
+                .statusCode(SC_FORBIDDEN)
                 .body("success", equalTo(false))
                 .body(
                         "message",

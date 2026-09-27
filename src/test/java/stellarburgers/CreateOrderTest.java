@@ -16,6 +16,7 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.apache.http.HttpStatus.*;
 
 public class CreateOrderTest {
 
@@ -35,7 +36,7 @@ public class CreateOrderTest {
                 .path("accessToken");
 
         ingredientIds = orderClient.getIngredients()
-                .statusCode(200)
+                .statusCode(SC_OK)
                 .extract()
                 .jsonPath()
                 .getList("data._id");
@@ -60,7 +61,7 @@ public class CreateOrderTest {
     @Description("Авторизованный пользователь создаёт заказ с ингредиентами")
     public void createOrderWithAuthorizationReturnsSuccess() {
         orderClient.create(orderWithValidIngredients(), accessToken)
-                .statusCode(200)
+                .statusCode(SC_OK)
                 .body("success", equalTo(true))
                 .body("order.number", notNullValue());
     }
@@ -70,7 +71,7 @@ public class CreateOrderTest {
     @Description("Заказ с ингредиентами можно создать без токена пользователя")
     public void createOrderWithoutAuthorizationReturnsSuccess() {
         orderClient.create(orderWithValidIngredients())
-                .statusCode(200)
+                .statusCode(SC_OK)
                 .body("success", equalTo(true))
                 .body("order.number", notNullValue());
     }
@@ -82,7 +83,7 @@ public class CreateOrderTest {
         Order order = new Order(Collections.emptyList());
 
         orderClient.create(order, accessToken)
-                .statusCode(400)
+                .statusCode(SC_BAD_REQUEST)
                 .body("success", equalTo(false))
                 .body(
                         "message",
@@ -99,6 +100,6 @@ public class CreateOrderTest {
         );
 
         orderClient.create(order, accessToken)
-                .statusCode(500);
+                .statusCode(SC_INTERNAL_SERVER_ERROR);
     }
 }
